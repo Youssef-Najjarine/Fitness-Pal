@@ -16,7 +16,6 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    window.location.hash = '#calendar?dayId=1';
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
@@ -24,17 +23,17 @@ export default class App extends React.Component {
 
   renderPage() {
     const { route } = this.state;
-    const dayId = route.params.get('dayId');
-    if (route.path === 'calendar') {
-      return <Calendar dayId= {dayId}/>;
+    if (route.path === 'calendar' || route.path === '') {
+      const dayId = route.params.get('dayId') || 1;
+      return <Calendar dayId={dayId} />;
     } else if (route.path === 'CalorieCalculator') {
-      return <CalorieCalculator/>;
+      return <CalorieCalculator />;
     } else if (route.path === 'AddNewMealOrExercise') {
-      return <AddNewMealOrExercise/>;
+      return <AddNewMealOrExercise />;
     } else if (route.path === 'addaNewMeal') {
-      return <AddaMeal/>;
+      return <AddaMeal />;
     } else if (route.path === 'addaNewExercise') {
-      return <AddanExercise/>;
+      return <AddanExercise />;
     }
   }
 
