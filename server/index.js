@@ -87,16 +87,18 @@ app.get('/api/days/:dayId/exercises', (req, res) => {
 });
 
 app.post('/api/days/meals', (req, res) => {
+  const userId = 1;
+  // const userId = req.user.userId;
   const { mealName, mealDescription, dayId } = req.body;
   if (!mealName || !mealDescription) {
     throw new ClientError(400, 'Please enter a valid meal name and description.');
   }
   const sql = `
-    insert into "meals" ("mealName", "mealDescription", "dayId")
-    values ($1, $2, $3)
+    insert into "meals" ("mealName", "mealDescription", "dayId", "userId")
+    values ($1, $2, $3, $4)
     returning *
   `;
-  const params = [mealName, mealDescription, dayId];
+  const params = [mealName, mealDescription, dayId, userId];
   db.query(sql, params)
     .then(result => {
       const [meal] = result.rows;

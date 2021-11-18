@@ -17,7 +17,6 @@ create schema "public";
   OIDS=FALSE
 );
 CREATE TABLE "days" (
-  "userId" integer NOT NULL,
   "dayId" serial NOT NULL,
   "day" TEXT NOT NULL,
   CONSTRAINT "days_pk" PRIMARY KEY ("dayId")
@@ -25,6 +24,7 @@ CREATE TABLE "days" (
   OIDS=FALSE
 );
 CREATE TABLE "meals" (
+    "userId" integer NOT NULL,
   "mealId" serial NOT NULL,
   "mealName" TEXT NOT NULL,
   "mealDescription" TEXT NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE "meals" (
   OIDS=FALSE
 );
 CREATE TABLE "exercises" (
+    "userId" integer NOT NULL,
   "exerciseId" serial NOT NULL,
   "exerciseName" TEXT NOT NULL,
   "exerciseDescription" TEXT NOT NULL,
@@ -42,6 +43,8 @@ CREATE TABLE "exercises" (
 ) WITH (
   OIDS=FALSE
 );
-ALTER TABLE "days" ADD CONSTRAINT "days_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
+
 ALTER TABLE "meals" ADD CONSTRAINT "meals_fk0" FOREIGN KEY ("dayId") REFERENCES "days"("dayId");
 ALTER TABLE "exercises" ADD CONSTRAINT "exercises_fk0" FOREIGN KEY ("dayId") REFERENCES "days"("dayId");
+ALTER TABLE "meals" ADD CONSTRAINT "meals_fk1" FOREIGN KEY ("userId") REFERENCES "users"("userId");
+ALTER TABLE "exercises" ADD CONSTRAINT "exercises_fk1" FOREIGN KEY ("userId") REFERENCES "users"("userId");
