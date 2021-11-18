@@ -5,3 +5,17 @@
 body {
   margin: 0;
 }
+
+h1,
+h2,
+h3 {
+  font-family: sans-serif;
+}
+
+label,
+p,
+a,
+button {
+  font-family: "Source Code Pro", monospace;
+  font-family: "Varela Round", sans-serif;
+}

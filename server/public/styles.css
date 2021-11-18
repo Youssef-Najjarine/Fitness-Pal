@@ -1,0 +1,97 @@
+h1 {
+  color: white;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.fa-calendar-alt,
+.fa-calculator {
+  color: white;
+}
+
+.fa-plus {
+  color: limegreen;
+}
+
+.add-new-meal-or-exercise a {
+  margin: 20px 0;
+  width: 900px;
+  padding: 100px 0;
+  text-align: center;
+  font-size: 40px;
+  color: #007bff;
+  text-transform: uppercase;
+  background: #fff;
+  border: 4px solid #007bff;
+  border-radius: 6px;
+  transition: all 0.3s ease 0s;
+}
+
+.days-buttons a {
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 170px;
+  height: 25px;
+  color: white;
+}
+
+.add-new-meal-or-exercise a:hover {
+  color: #494949;
+  border-radius: 50px;
+  border-color: #494949;
+  transition: all 0.3s ease 0s;
+}
+
+.calorie-calculator-submit {
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: limegreen;
+  border-color: limegreen;
+}
+
+li {
+  list-style-type: none;
+  margin-left: 10px;
+  border-style: dotted;
+  border-color: white white rgb(218 218 218) white;
+}
+
+ul label {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+ul p {
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+ul h3 {
+  margin: 0 0 10px 3px;
+  border-style: solid;
+  border-color: white white rgb(218 218 218) white;
+}
+
+ul .column-half:nth-of-type(1) {
+  border-style: solid;
+  border-color: white rgb(218 218 218) white white;
+}
+
+.exercises-h3 {
+  margin-top: 3px;
+}
+
+.active {
+  background-color: orange;
+}
+
+.not-active {
+  background-color: #4682b4;
+}
