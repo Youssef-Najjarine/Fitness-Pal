@@ -22,6 +22,25 @@ app.use(jsonMiddleware);
 
 app.use(errorMiddleware);
 
+app.get('/api/users', (req, res) => {
+
+  const sql = `
+    select  "RDA"
+      from "users"
+  `;
+
+  db.query(sql)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
 app.get('/api/days', (req, res) => {
 
   const sql = `
@@ -129,6 +148,37 @@ app.post('/api/days/exercises', (req, res) => {
     .then(result => {
       const [exercise] = result.rows;
       res.status(201).json(exercise);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.patch('/api/users/:userId', (req, res) => {
+  const userId = 1;
+  const { bmr } = req.body;
+  if (!bmr) {
+    throw new ClientError(400, 'please enter a valid bmr');
+  }
+
+  const sql = `
+    update "users"
+       set "createdAt" = now(),
+           "RDA" = $1
+     where "userId" = $2
+     returning *
+  `;
+  const params = [bmr, userId];
+  db.query(sql, params)
+    .then(result => {
+      const [todo] = result.rows;
+      if (!todo) {
+        throw new ClientError(400, `cannot find user with userId ${userId}`);
+      }
+      res.json(todo);
     })
     .catch(err => {
       console.error(err);

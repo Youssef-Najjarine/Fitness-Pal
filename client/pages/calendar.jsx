@@ -6,12 +6,21 @@ export default class Calendar extends React.Component {
     this.state = {
       meals: [],
       exercises: [],
-      days: []
+      days: [],
+      RDA: 0
     };
   }
 
   getData() {
     const { dayId } = this.props;
+
+    fetch('/api/users')
+      .then(response => response.json())
+      .then(data => {
+        let [rda] = data;
+        rda = rda.RDA;
+        this.setState({ RDA: rda });
+      });
 
     fetch('/api/days')
       .then(response => response.json())
@@ -41,6 +50,14 @@ export default class Calendar extends React.Component {
   componentDidMount() {
     const { dayId } = this.props;
 
+    fetch('/api/users')
+      .then(response => response.json())
+      .then(data => {
+        let [rda] = data;
+        rda = rda.RDA;
+        this.setState({ RDA: rda });
+      });
+
     fetch('/api/days')
       .then(response => response.json())
       .then(data => {
@@ -68,9 +85,7 @@ export default class Calendar extends React.Component {
           <label>{meal.mealName}</label>
           <p>{meal.mealDescription}</p>
         </div>
-
         <div>
-
         </div>
       </li>;
     });
@@ -109,9 +124,17 @@ export default class Calendar extends React.Component {
       : 'not-active';
   }
 
+  getBmr() {
+    return this.state.RDA === 0
+      ? 'N/A'
+      : this.state.RDA;
+  }
+
   render() {
+
     return (
       <main>
+        <div className='column-full bmr'><h2>Basal metabolic rate (BMR): {this.getBmr()}</h2></div>
         <div className='days-buttons'>
         {this.handleDays()}
         </div>

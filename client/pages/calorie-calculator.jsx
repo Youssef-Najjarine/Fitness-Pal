@@ -1,16 +1,102 @@
 import React from 'react';
-
+import ClientError from '../../server/client-error';
 export default class CalorieCalculator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gender: 'default'
+      gender: 'default',
+      age: '',
+      weight: '',
+      height: '',
+      activityLevel: 'default'
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    // fetch('/api/days')
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     this.setState({ days: data });
+    //   });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    let bmr = 0;
+    const { gender, age, weight, height, activityLevel } = this.state;
+    if (gender === 'default' || activityLevel === 'default') {
+      throw new ClientError(400, 'Please provide a valid gender and activity level.');
+    }
+    if (gender === 'Male') {
+      bmr = 66.47 + (13.75 * (Number(weight) / 2.205)) + (5.003 * (Number(height) * 2.54)) - (6.755 * Number(age));
+    } else if (gender === 'Female') {
+      bmr = 655.1 + (9.563 * (Number(weight) / 2.205)) + (1.850 * (Number(height) * 2.54)) - (4.676 * Number(age));
+    }
+
+    if (activityLevel === 'sedentary') {
+      bmr = bmr * 1.2;
+    } else if (activityLevel === 'lightly active') {
+      bmr = bmr * 1.375;
+    } else if (activityLevel === 'moderately active') {
+      bmr = bmr * 1.55;
+    } else if (activityLevel === 'active') {
+      bmr = bmr * 1.725;
+    } else {
+      bmr = bmr * 1.9;
+    }
+    bmr = ~~bmr;
+    const newObject = { bmr };
+
+    fetch('/api/users/:userId', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newObject)
+    })
+      .then(response => response.json())
+      .then(data => {})
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    // const { dayId, mealName, mealDescription } = this.state;
+    // const newMeal = { mealName, mealDescription, dayId };
+    // if (dayId === 'default') {
+    //   throw new ClientError(400, 'Please enter a valid Day of the week.');
+    // } else {
+
+    // fetch('/api/days/meals', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(newMeal)
+    // })
+    //   .then(response => response.json())
+    //   .then(newMeal => { })
+    //   .catch(error => {
+    //     console.error('Error:', error);
+    //   });
+
+    window.location.hash = '#calendar?dayId=1';
+    this.setState({
+      gender: 'default',
+      age: '',
+      weight: '',
+      height: '',
+      activityLevel: 'default'
+    });
+    // }
   }
 
   handleChange(event) {
-    this.setState({ gender: event.target.value });
+    const value = event.target.value;
+
+    const name = event.target.name;
+
+    this.setState({ [name]: value });
   }
 
   render() {
@@ -18,48 +104,73 @@ export default class CalorieCalculator extends React.Component {
       <main className= 'calorie-calculator'>
       <h2>Calorie Calculator</h2>
         <h3>Fill out the form and press “Submit” to calculate your daily calorie needs</h3>
-        <form>
+        <form onSubmit={this.handleSubmit}>
       <div className='row'>
         <label>Gender</label>
-            <select value={this.state.gender} onChange={this.handleChange}>
+            <select
+                    name="gender"
+                    value={this.state.gender}
+                    onChange={this.handleChange}>
               <option value="default" disabled>Select Your Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
       </div>
             <div className='row'>
               <label>Age</label>
               <input
-              type='text'
-              placeholder= 'Please enter your age...'
+                    required
+                    type='text'
+                    placeholder= 'Please enter your age...'
+                    onChange={this.handleChange}
+                    value={this.state.age}
+                    id='age'
+                    name='age'
               />
             </div>
           <div className='row'>
             <label>Weight</label>
             <input
-              type='text'
-              placeholder='Please enter your weight in lbs...'
+                    required
+                    type='text'
+                    placeholder='Please enter your weight in lbs...'
+                    onChange={this.handleChange}
+                    value={this.state.weight}
+                    id='weight'
+                    name='weight'
             />
           </div>
           <div className='row'>
             <label>Height</label>
             <input
-              type='text'
-              placeholder='Please enter your height in inches...'
+                  required
+                  type='text'
+                  placeholder='Please enter your height in inches...'
+                  onChange={this.handleChange}
+                  value={this.state.height}
+                  id='height'
+                  name='height'
             />
           </div>
           <div className='row'>
             <label className='activityLevelLabel'>Activity Level</label>
-            <select name="gender" id="gender">
-              <option value="">Select your level of activity</option>
+            <select
+                    name="activityLevel"
+                    value={this.state.activityLevel}
+                    onChange={this.handleChange}
+                    >
+              <option value="default" disabled>Select your level of activity</option>
               <option value="sedentary">Sedentary</option>
               <option value="lightly active">Lightly Active (1-3 days a week)</option>
               <option value="moderately active">Moderately Active (3-5 days a week)</option>
-              <option value="very active">Very Active (6-7 days a week)</option>
-              <option value="extra active">Extra Active (7 days a week)</option>
+              <option value="active">Active (6-7 days a week)</option>
+              <option value="very active">Very Active (7 days a week)</option>
             </select>
           </div>
-            <button className='calorie-calculator-submit'>Submit</button>
+            <span className="meal-exercise-cancel-submit-calorie-calc">
+            <a href="#calendar?dayId=1">Cancel</a>
+              <button className='calorie-calculator-submit'>Submit</button>
+            </span>
       </form>
       </main>
     );

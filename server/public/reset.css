@@ -15,7 +15,9 @@ h3 {
 label,
 p,
 a,
-button {
+button,
+input,
+select {
   font-family: "Source Code Pro", monospace;
   font-family: "Varela Round", sans-serif;
 }
