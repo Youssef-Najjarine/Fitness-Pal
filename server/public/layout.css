@@ -16,7 +16,7 @@
 }
 
 .days-buttons {
-  margin-top: 20px;
+  margin-top: 5px;
   display: flex;
   justify-content: space-between;
 }
@@ -103,6 +103,11 @@ footer {
   margin: 0 30px;
   display: flex;
   justify-content: space-between;
+}
+
+.meal-exercise-cancel-submit-calorie-calc {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .meal-exercise-cancel-submit button {
