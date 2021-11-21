@@ -15,6 +15,25 @@
   width: 50%;
 }
 
+.row-meal-exercise {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.row-meal-exercise a {
+  font-size: 35px;
+  margin: 10px;
+}
+
+.fa-edit {
+  color: blue;
+}
+
+.fa-trash-alt {
+  color: red;
+}
+
 .days-buttons {
   margin-top: 5px;
   display: flex;

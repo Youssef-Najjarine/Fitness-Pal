@@ -105,6 +105,47 @@ app.get('/api/days/:dayId/exercises', (req, res) => {
     });
 });
 
+app.get('/api/meals/:mealId', (req, res) => {
+  const mealId = parseInt(req.params.mealId, 10);
+  const sql = `
+    select *
+      from "meals"
+      where "mealId"= $1
+  `;
+  const params = [mealId];
+  db.query(sql, params)
+    .then(result => {
+      const [meal] = result.rows;
+      res.status(201).json(meal);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.get('/api/exercises/:exerciseId', (req, res) => {
+  const exerciseId = parseInt(req.params.exerciseId, 10);
+  const sql = `
+    select *
+      from "exercises"
+      where "exerciseId"= $1
+  `;
+  const params = [exerciseId];
+  db.query(sql, params)
+    .then(result => {
+      const [exercise] = result.rows;
+      res.status(201).json(exercise);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
 app.post('/api/days/meals', (req, res) => {
   const userId = 1;
   // const userId = req.user.userId;
@@ -179,6 +220,70 @@ app.patch('/api/users/:userId', (req, res) => {
         throw new ClientError(400, `cannot find user with userId ${userId}`);
       }
       res.json(todo);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.patch('/api/meals/:mealId', (req, res) => {
+  const { mealId } = req.params;
+  const { mealName, mealDescription, dayId } = req.body;
+  if (!mealId || !mealName || !mealDescription || !dayId) {
+    throw new ClientError(400, 'please enter a valid meal name, meal description, and day of the week.');
+  }
+
+  const sql = `
+    update "meals"
+       set "mealName" = $1,
+           "mealDescription" = $2,
+           "dayId" = $3
+     where "mealId" = $4
+     returning *
+  `;
+  const params = [mealName, mealDescription, dayId, mealId];
+  db.query(sql, params)
+    .then(result => {
+      const [updatedMeal] = result.rows;
+      if (!updatedMeal) {
+        throw new ClientError(400, `cannot find mealId with mealId ${mealId}`);
+      }
+      res.json(updatedMeal);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.patch('/api/exercises/:exerciseId', (req, res) => {
+  const { exerciseId } = req.params;
+  const { exerciseName, exerciseDescription, dayId } = req.body;
+  if (!exerciseId || !exerciseName || !exerciseDescription || !dayId) {
+    throw new ClientError(400, 'please enter a valid exercise name, exercise description, and day of the week.');
+  }
+
+  const sql = `
+    update "exercises"
+       set "exerciseName" = $1,
+           "exerciseDescription" = $2,
+           "dayId" = $3
+     where "exerciseId" = $4
+     returning *
+  `;
+  const params = [exerciseName, exerciseDescription, dayId, exerciseId];
+  db.query(sql, params)
+    .then(result => {
+      const [updatedExercise] = result.rows;
+      if (!updatedExercise) {
+        throw new ClientError(400, `cannot find exerciseId with exerciseId ${exerciseId}`);
+      }
+      res.json(updatedExercise);
     })
     .catch(err => {
       console.error(err);

@@ -80,12 +80,14 @@ export default class Calendar extends React.Component {
   handleMeals() {
     const meals = this.state.meals;
     return meals.map(meal => {
-      return <li key={meal.mealId}>
+      return <li key={meal.mealId} className='row-meal-exercise'>
         <div>
           <label>{meal.mealName}</label>
           <p>{meal.mealDescription}</p>
         </div>
         <div>
+          <a href={`#editAMeal?dayId=${meal.dayId}?mealId=${meal.mealId}`} className="fas fa-edit"></a>
+          <a className="fas fa-trash-alt"></a>
         </div>
       </li>;
     });
@@ -94,14 +96,14 @@ export default class Calendar extends React.Component {
   handleExercises() {
     const exercises = this.state.exercises;
     return exercises.map(exercise => {
-      return <li key={exercise.exerciseId}>
+      return <li key={exercise.exerciseId} className='row-meal-exercise'>
         <div>
           <label>{exercise.exerciseName}</label>
           <p>{exercise.exerciseDescription}</p>
         </div>
-
         <div>
-
+          <a href={`#editAExercise?dayId=${exercise.dayId}?exerciseId=${exercise.exerciseId}`} className="fas fa-edit"></a>
+          <a className="fas fa-trash-alt"></a>
         </div>
       </li>;
     });
@@ -142,6 +144,8 @@ export default class Calendar extends React.Component {
           <div className='column-half'>
             <h3>Meals</h3>
               {this.handleMeals()}
+              <div>
+            </div>
             </div>
 
           <div className='column-half'>

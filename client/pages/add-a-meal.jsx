@@ -45,7 +45,7 @@ export default class AddaMeal extends React.Component {
       window.location.hash = `#calendar?dayId=${dayId}`;
       this.setState({
         days: [],
-        dayId: 0,
+        dayId: 'default',
         mealName: '',
         mealDescription: ''
       });
