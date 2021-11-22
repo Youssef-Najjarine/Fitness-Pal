@@ -86,8 +86,8 @@ export default class Calendar extends React.Component {
           <p>{meal.mealDescription}</p>
         </div>
         <div>
-          <a href={`#editAMeal?dayId=${meal.dayId}?mealId=${meal.mealId}`} className="fas fa-edit"></a>
-          <a className="fas fa-trash-alt"></a>
+          <a href={`#editAMeal?dayId=${meal.dayId}?mealId=${meal.mealId}`} className="fas fa-edit blue-text"></a>
+          <a className="fas fa-trash-alt red-text"></a>
         </div>
       </li>;
     });
@@ -102,8 +102,8 @@ export default class Calendar extends React.Component {
           <p>{exercise.exerciseDescription}</p>
         </div>
         <div>
-          <a href={`#editAExercise?dayId=${exercise.dayId}?exerciseId=${exercise.exerciseId}`} className="fas fa-edit"></a>
-          <a className="fas fa-trash-alt"></a>
+          <a href={`#editAExercise?dayId=${exercise.dayId}?exerciseId=${exercise.exerciseId}`} className="fas fa-edit blue-text"></a>
+          <a className="fas fa-trash-alt red-text"></a>
         </div>
       </li>;
     });
