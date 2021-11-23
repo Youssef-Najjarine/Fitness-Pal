@@ -7,6 +7,8 @@ import CalorieCalculator from './pages/calorie-calculator';
 import AddNewMealOrExercise from './pages/add-new-meal-or-exercise';
 import AddaMeal from './pages/add-a-meal';
 import AddanExercise from './pages/add-an-exercise';
+import EditAMeal from './pages/edit-a-meal';
+import EditAExercise from './pages/edit-an-exercise';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,10 @@ export default class App extends React.Component {
       return <AddaMeal />;
     } else if (route.path === 'addaNewExercise') {
       return <AddanExercise />;
+    } else if (route.path === 'editAMeal') {
+      return <EditAMeal/>;
+    } else if (route.path === 'editAExercise') {
+      return <EditAExercise/>;
     }
   }
 

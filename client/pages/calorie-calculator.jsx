@@ -61,24 +61,6 @@ export default class CalorieCalculator extends React.Component {
       .catch(error => {
         console.error('Error:', error);
       });
-    // const { dayId, mealName, mealDescription } = this.state;
-    // const newMeal = { mealName, mealDescription, dayId };
-    // if (dayId === 'default') {
-    //   throw new ClientError(400, 'Please enter a valid Day of the week.');
-    // } else {
-
-    // fetch('/api/days/meals', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(newMeal)
-    // })
-    //   .then(response => response.json())
-    //   .then(newMeal => { })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
 
     window.location.hash = '#calendar?dayId=1';
     this.setState({
