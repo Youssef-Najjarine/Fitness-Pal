@@ -52,16 +52,21 @@ footer {
   background-color: #4682b4;
 }
 
+main {
+  height: 80vh;
+  overflow: scroll;
+}
+
 ul {
   padding: 0;
 }
 
-footer {
+/* footer {
   position: fixed;
   width: 1200px;
   top: 858px;
   left: 360px;
-}
+} */
 
 .footer-display {
   display: flex;
