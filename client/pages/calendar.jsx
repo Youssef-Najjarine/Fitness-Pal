@@ -1,4 +1,5 @@
 import React from 'react';
+import deleteEntry from './delete-entries';
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ export default class Calendar extends React.Component {
       days: [],
       RDA: 0
     };
+    this.getData = this.getData.bind(this);
   }
 
   getData() {
@@ -87,7 +89,7 @@ export default class Calendar extends React.Component {
         </div>
         <div>
           <a href={`#editAMeal?dayId=${meal.dayId}?mealId=${meal.mealId}`} className="fas fa-edit blue-text"></a>
-          <a className="fas fa-trash-alt red-text"></a>
+          <button onClick={() => deleteEntry('meal', meal.mealId, this.getData)} className="fas fa-trash-alt red-text"></button>
         </div>
       </li>;
     });
@@ -103,7 +105,7 @@ export default class Calendar extends React.Component {
         </div>
         <div>
           <a href={`#editAExercise?dayId=${exercise.dayId}?exerciseId=${exercise.exerciseId}`} className="fas fa-edit blue-text"></a>
-          <a className="fas fa-trash-alt red-text"></a>
+          <button onClick={() => deleteEntry('exercise', exercise.exerciseId, this.getData)} className="fas fa-trash-alt red-text"></button>
         </div>
       </li>;
     });
