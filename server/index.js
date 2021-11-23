@@ -292,6 +292,41 @@ app.patch('/api/exercises/:exerciseId', (req, res) => {
       });
     });
 });
+
+app.delete('/api/meals/:mealId', function (req, res) {
+  let { mealId } = req.params;
+  mealId = Number(mealId);
+
+  const text = `DELETE FROM "meals"
+              where "mealId"=$1
+              RETURNING *`;
+  const value = [mealId];
+  db.query(text, value, (err, res2) => {
+    if (err) {
+      return res.status(500).send({ error: 'database querying failed.' });
+    } else {
+      return res.sendStatus(204);
+    }
+  });
+});
+
+app.delete('/api/exercises/:exerciseId', function (req, res) {
+  let { exerciseId } = req.params;
+  exerciseId = Number(exerciseId);
+
+  const text = `DELETE FROM "exercises"
+              where "exerciseId"=$1
+              RETURNING *`;
+  const value = [exerciseId];
+  db.query(text, value, (err, res2) => {
+    if (err) {
+      return res.status(500).send({ error: 'database querying failed.' });
+    } else {
+      return res.sendStatus(204);
+    }
+  });
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);

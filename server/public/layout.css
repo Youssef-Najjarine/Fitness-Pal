@@ -26,6 +26,12 @@
   margin: 10px;
 }
 
+.row-meal-exercise button {
+  border: 0;
+  font-size: 35px;
+  background-color: white;
+}
+
 .blue-text {
   color: blue;
 }

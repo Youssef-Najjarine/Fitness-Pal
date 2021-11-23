@@ -2,7 +2,8 @@ h1 {
   color: white;
 }
 
-a {
+a,
+button {
   cursor: pointer;
   text-decoration: none;
 }
