@@ -8,8 +8,8 @@ create schema "public";
   "userId" serial NOT NULL,
   "firstName" TEXT NOT NULL,
   "lastName" TEXT NOT NULL,
-  "email" TEXT NOT NULL,
-  "password" TEXT NOT NULL,
+  "email" TEXT NOT NULL UNIQUE,
+  "hashedPassword" TEXT NOT NULL,
   "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
   "RDA" integer NOT NULL,
   CONSTRAINT "users_pk" PRIMARY KEY ("userId")

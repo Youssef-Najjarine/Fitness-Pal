@@ -48,19 +48,22 @@
 
 header,
 footer {
-  padding-left: 20px;
   background-color: #4682b4;
+}
+
+header.row {
+  padding: 0 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+main {
+  height: 80.5vh;
+  overflow: scroll;
 }
 
 ul {
   padding: 0;
-}
-
-footer {
-  position: fixed;
-  width: 1200px;
-  top: 858px;
-  left: 360px;
 }
 
 .footer-display {
@@ -76,18 +79,22 @@ footer {
 }
 
 .add-new-meal-or-exercise {
-  margin-top: 50px;
+  padding: 50px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* addAMealCSS */
+.sign-in-icon {
+  color: darkblue;
+  font-size: 50px;
+}
 
-.create-new-meal-exercise h2 {
-  font-size: 40px;
-  margin-top: 100px;
-  text-align: center;
+.sign-up-sign-in-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 90%;
+  margin: 100px auto;
 }
 
 .new-meal-exercise-select {
@@ -100,11 +107,73 @@ footer {
   margin-bottom: 20px;
 }
 
+.create-new-meal-exercise h2 {
+  font-size: 40px;
+  margin-top: 100px;
+  text-align: center;
+}
+
 .create-new-meal-exercise-form {
   display: flex;
   flex-direction: column;
   max-width: 90%;
   margin: 100px auto;
+}
+
+.sign-up-sign-in {
+  text-align: center;
+}
+
+.sign-up-sign-in h2 {
+  font-size: 60px;
+  margin-top: 100px;
+}
+
+.sign-up-sign-in-email,
+.sign-up-sign-in-password {
+  border-style: solid;
+  border-color: #4682b4;
+  font-size: 20px;
+  border-radius: 5px;
+  height: 40px;
+  width: 610px;
+  margin: 0 10px 50px 0;
+}
+
+.sign-up-sign-in-first-name,
+.sign-up-sign-in-last-name {
+  border-style: solid;
+  border-color: #4682b4;
+  font-size: 20px;
+  border-radius: 5px;
+  height: 40px;
+  width: 300px;
+  margin: 0 10px 50px 0;
+}
+
+.sign-up-sign-in-cancel-submit {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.sign-up-sign-in-cancel-submit button {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.sign-up-sign-in-cancel-submit a {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 10px;
 }
 
 .meal-exercise-name {
@@ -155,11 +224,9 @@ footer {
   border-radius: 10px;
 }
 
-/* addAMealCSS */
 .calorie-calculator {
-  max-width: 90%;
-  margin: 100px auto;
   text-align: center;
+  padding: 50px 50px 0 0;
 }
 
 .calorie-calculator div {

@@ -1,4 +1,4 @@
-insert into "users" ("firstName", "lastName", "email", "password", "RDA")
+insert into "users" ("firstName", "lastName", "email", "hashedPassword", "RDA")
 values ('Youssef', 'Najjarine', 'ynajjarine@yahoo.com', 'yahoos', 0);
 insert into "days" ("day")
 values ('Mon');
