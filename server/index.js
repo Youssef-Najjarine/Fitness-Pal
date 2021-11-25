@@ -1,9 +1,10 @@
 require('dotenv/config');
 const pg = require('pg');
+const argon2 = require('argon2');
 const express = require('express');
+const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
-const ClientError = require('./client-error');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -325,6 +326,29 @@ app.delete('/api/exercises/:exerciseId', function (req, res) {
       return res.sendStatus(204);
     }
   });
+});
+
+app.post('/api/users/sign-up', (req, res, next) => {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
+    throw new ClientError(400, 'first name, last name, email, and password are required fields');
+  }
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+        insert into "users" ("firstName", "lastName", "email", "hashedPassword", "RDA")
+        values ($1, $2, $3, $4, $5)
+        returning "userId", "firstName", "lastName", "createdAt"
+      `;
+      const params = [firstName, lastName, email, hashedPassword, 0];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
 });
 
 app.listen(process.env.PORT, () => {

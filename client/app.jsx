@@ -9,6 +9,8 @@ import AddaMeal from './pages/add-a-meal';
 import AddanExercise from './pages/add-an-exercise';
 import EditAMeal from './pages/edit-a-meal';
 import EditAExercise from './pages/edit-an-exercise';
+import SignUpOrSignIn from './pages/sign-up-or-sign-in';
+import SignUp from './pages/sign-up';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -40,6 +42,10 @@ export default class App extends React.Component {
       return <EditAMeal/>;
     } else if (route.path === 'editAExercise') {
       return <EditAExercise/>;
+    } else if (route.path === 'SignUpOrSignIn') {
+      return <SignUpOrSignIn/>;
+    } else if (route.path === 'signUp') {
+      return <SignUp/>;
     }
   }
 
