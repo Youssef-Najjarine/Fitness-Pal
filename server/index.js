@@ -1,11 +1,12 @@
 require('dotenv/config');
 const pg = require('pg');
+const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
 const express = require('express');
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
-
+const authorizationMiddleware = require('./authorization-middleware');
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -23,14 +24,19 @@ app.use(jsonMiddleware);
 
 app.use(errorMiddleware);
 
+app.use(authorizationMiddleware);
 app.get('/api/users', (req, res) => {
-
+  let userId = 1;
+  if (req.user) {
+    userId = req.user.userId;
+  }
   const sql = `
     select  "RDA"
       from "users"
+      where "userId" = $1
   `;
-
-  db.query(sql)
+  const params = [userId];
+  db.query(sql, params)
     .then(result => {
       res.json(result.rows);
     })
@@ -63,14 +69,18 @@ app.get('/api/days', (req, res) => {
 });
 
 app.get('/api/days/:dayId/meals', (req, res) => {
+  let userId = 1;
+  if (req.user) {
+    userId = req.user.userId;
+  }
   const { dayId } = req.params;
   const sql = `
     select *
       from "meals"
-      where "dayId"= $1
+      where "dayId"= $1 AND "userId" = $2
      order by "mealId"
   `;
-  const params = [dayId];
+  const params = [dayId, userId];
 
   db.query(sql, params)
     .then(result => {
@@ -85,14 +95,18 @@ app.get('/api/days/:dayId/meals', (req, res) => {
 });
 
 app.get('/api/days/:dayId/exercises', (req, res) => {
+  let userId = 1;
+  if (req.user) {
+    userId = req.user.userId;
+  }
   const { dayId } = req.params;
   const sql = `
     select *
       from "exercises"
-      where "dayId"= $1
+      where "dayId"= $1 AND "userId" = $2
      order by "exerciseId"
   `;
-  const params = [dayId];
+  const params = [dayId, userId];
 
   db.query(sql, params)
     .then(result => {
@@ -148,8 +162,12 @@ app.get('/api/exercises/:exerciseId', (req, res) => {
     });
 });
 app.post('/api/days/meals', (req, res) => {
-  const userId = 1;
-  // const userId = req.user.userId;
+  let userId = 0;
+  if (!req.user) {
+    userId = 1;
+  } else {
+    userId = req.user.userId;
+  }
   const { mealName, mealDescription, dayId } = req.body;
   if (!mealName || !mealDescription) {
     throw new ClientError(400, 'Please enter a valid meal name and description.');
@@ -174,8 +192,12 @@ app.post('/api/days/meals', (req, res) => {
 });
 
 app.post('/api/days/exercises', (req, res) => {
-  const userId = 1;
-  // const userId = req.user.userId;
+  let userId = 0;
+  if (!req.user) {
+    userId = 1;
+  } else {
+    userId = req.user.userId;
+  }
   const { exerciseName, exerciseDescription, dayId } = req.body;
   if (!exerciseName || !exerciseDescription) {
     throw new ClientError(400, 'Please enter a valid exercise name and description.');
@@ -200,7 +222,10 @@ app.post('/api/days/exercises', (req, res) => {
 });
 
 app.patch('/api/users/:userId', (req, res) => {
-  const userId = 1;
+  let userId = 1;
+  if (req.user) {
+    userId = req.user.userId;
+  }
   const { bmr } = req.body;
   if (!bmr) {
     throw new ClientError(400, 'please enter a valid bmr');
@@ -347,6 +372,41 @@ app.post('/api/users/sign-up', (req, res, next) => {
     .then(result => {
       const [user] = result.rows;
       res.status(201).json(user);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/users/sign-in', (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new ClientError(401, 'invalid login');
+  }
+  const sql = `
+    select "userId",
+           "hashedPassword",
+           "firstName",
+           "lastName"
+      from "users"
+     where "email" = $1
+  `;
+  const params = [email];
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      if (!user) {
+        throw new ClientError(401, 'invalid login');
+      }
+      const { userId, hashedPassword, firstName, lastName } = user;
+      return argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) {
+            throw new ClientError(401, 'invalid login');
+          }
+          const payload = { userId, fullName: firstName + ' ' + lastName };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          res.json({ token, user: payload });
+        });
     })
     .catch(err => next(err));
 });

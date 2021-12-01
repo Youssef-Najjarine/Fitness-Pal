@@ -10,26 +10,37 @@ import AddanExercise from './pages/add-an-exercise';
 import EditAMeal from './pages/edit-a-meal';
 import EditAExercise from './pages/edit-an-exercise';
 import SignUpOrSignIn from './pages/sign-up-or-sign-in';
-import SignUp from './pages/sign-up';
+import CreateAccount from './pages/create-account';
+import SignIn from './pages/sign-in';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       route: parseRoute(window.location.hash)
     };
+    this.handleSignIn = this.handleSignIn.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
+    const userJSON = window.localStorage.getItem('currentUser');
+    const user = userJSON ? JSON.parse(userJSON).name : null;
+    this.setState({ user: user });
+  }
+
+  handleSignIn(currentUser) {
+    window.localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    this.setState({ user: currentUser.name });
   }
 
   renderPage() {
-    const { route } = this.state;
+    const { route, user } = this.state;
     if (route.path === 'calendar' || route.path === '') {
       const dayId = route.params.get('dayId') || 1;
-      return <Calendar dayId={dayId} />;
+      return <Calendar dayId={dayId} user={user}/>;
     } else if (route.path === 'CalorieCalculator') {
       return <CalorieCalculator />;
     } else if (route.path === 'AddNewMealOrExercise') {
@@ -44,8 +55,10 @@ export default class App extends React.Component {
       return <EditAExercise/>;
     } else if (route.path === 'SignUpOrSignIn') {
       return <SignUpOrSignIn/>;
-    } else if (route.path === 'signUp') {
-      return <SignUp/>;
+    } else if (route.path === 'createAccount') {
+      return <CreateAccount/>;
+    } else if (route.path === 'signIn') {
+      return <SignIn handleSignIn={this.handleSignIn}/>;
     }
   }
 

@@ -14,16 +14,9 @@ export default class CalorieCalculator extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-    // fetch('/api/days')
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     this.setState({ days: data });
-    //   });
-  }
-
   handleSubmit(event) {
     event.preventDefault();
+    const currentUserJSON = localStorage.getItem('currentUser');
     let bmr = 0;
     const { gender, age, weight, height, activityLevel } = this.state;
     if (gender === 'default' || activityLevel === 'default') {
@@ -48,20 +41,37 @@ export default class CalorieCalculator extends React.Component {
     }
     bmr = ~~bmr;
     const newObject = { bmr };
+    if (currentUserJSON !== null) {
+      const currentUser = JSON.parse(currentUserJSON);
+      const { token } = currentUser;
+      fetch('/api/users/:userId', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        body: JSON.stringify(newObject)
+      })
+        .then(response => response.json())
+        .then(data => { })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else {
+      fetch('/api/users/:userId', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newObject)
+      })
+        .then(response => response.json())
+        .then(data => { })
+        .catch(error => {
+          console.error('Error:', error);
+        });
 
-    fetch('/api/users/:userId', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newObject)
-    })
-      .then(response => response.json())
-      .then(data => {})
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
+    }
     window.location.hash = '#calendar?dayId=1';
     this.setState({
       gender: 'default',
@@ -70,7 +80,6 @@ export default class CalorieCalculator extends React.Component {
       height: '',
       activityLevel: 'default'
     });
-    // }
   }
 
   handleChange(event) {
