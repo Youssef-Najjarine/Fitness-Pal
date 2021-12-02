@@ -14,9 +14,13 @@ export default class Calendar extends React.Component {
   }
 
   getData() {
-    const { dayId } = this.props;
-
-    fetch('/api/users')
+    const { dayId, token } = this.props;
+    fetch('/api/users', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         let [rda] = data;
@@ -24,19 +28,34 @@ export default class Calendar extends React.Component {
         this.setState({ RDA: rda });
       });
 
-    fetch('/api/days')
+    fetch('/api/days', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ days: data });
       });
 
-    fetch(`/api/days/${dayId}/meals`)
+    fetch(`/api/days/${dayId}/meals`, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ meals: data });
       });
 
-    fetch(`/api/days/${dayId}/exercises`)
+    fetch(`/api/days/${dayId}/exercises`, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ exercises: data });
@@ -44,15 +63,19 @@ export default class Calendar extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.dayId !== this.props.dayId) {
+    if (prevProps.dayId !== this.props.dayId || prevProps.user !== this.props.user) {
       this.getData();
     }
   }
 
   componentDidMount() {
-    const { dayId } = this.props;
-
-    fetch('/api/users')
+    const { dayId, token } = this.props;
+    fetch('/api/users', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         let [rda] = data;
@@ -60,19 +83,34 @@ export default class Calendar extends React.Component {
         this.setState({ RDA: rda });
       });
 
-    fetch('/api/days')
+    fetch('/api/days', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ days: data });
       });
 
-    fetch(`/api/days/${dayId}/meals`)
+    fetch(`/api/days/${dayId}/meals`, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ meals: data });
       });
 
-    fetch(`/api/days/${dayId}/exercises`)
+    fetch(`/api/days/${dayId}/exercises`, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ exercises: data });

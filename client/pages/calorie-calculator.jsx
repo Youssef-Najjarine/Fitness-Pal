@@ -14,14 +14,6 @@ export default class CalorieCalculator extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-    // fetch('/api/days')
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     this.setState({ days: data });
-    //   });
-  }
-
   handleSubmit(event) {
     event.preventDefault();
     let bmr = 0;
@@ -48,16 +40,17 @@ export default class CalorieCalculator extends React.Component {
     }
     bmr = ~~bmr;
     const newObject = { bmr };
-
+    const { token } = this.props;
     fetch('/api/users/:userId', {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': token
       },
       body: JSON.stringify(newObject)
     })
       .then(response => response.json())
-      .then(data => {})
+      .then(data => { })
       .catch(error => {
         console.error('Error:', error);
       });
@@ -70,7 +63,6 @@ export default class CalorieCalculator extends React.Component {
       height: '',
       activityLevel: 'default'
     });
-    // }
   }
 
   handleChange(event) {

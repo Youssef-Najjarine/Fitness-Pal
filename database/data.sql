@@ -1,5 +1,5 @@
 insert into "users" ("firstName", "lastName", "email", "hashedPassword", "RDA")
-values ('Youssef', 'Najjarine', 'ynajjarine@yahoo.com', 'yahoos', 0);
+values ('Youssef', 'Najjarine', 'ynajjarine@yahoo.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImZ1bGxOYW1lIjoiWW91c3NlZiBOYWpqYXJpbmUiLCJpYXQiOjE2MzgzODY0MDF9.xoaJ3M4BLKd-nGLXfExqCLzpZLeUam3Jfe4tEKxQmE4', 0);
 insert into "days" ("day")
 values ('Mon');
 

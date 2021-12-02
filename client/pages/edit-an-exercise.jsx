@@ -15,7 +15,13 @@ export default class EditAExercise extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/days')
+    const { token } = this.props;
+    fetch('/api/days', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ days: data });
@@ -23,7 +29,10 @@ export default class EditAExercise extends React.Component {
     const hashArray = window.location.hash.split('?');
     const exerciseId = new URLSearchParams(hashArray[2]).get('exerciseId');
     fetch(`/api/exercises/${exerciseId}`, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
     })
       .then(response => response.json())
       .then(data => {
@@ -36,6 +45,7 @@ export default class EditAExercise extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const { token } = this.props;
     const hashArray = window.location.hash.split('?');
     const exerciseId = new URLSearchParams(hashArray[2]).get('exerciseId');
     const { dayId, exerciseName, exerciseDescription } = this.state;
@@ -47,7 +57,8 @@ export default class EditAExercise extends React.Component {
       fetch(`/api/exercises/${exerciseId}`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-access-token': token
         },
         body: JSON.stringify(updatedExercise)
       })

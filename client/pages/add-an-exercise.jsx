@@ -14,7 +14,15 @@ export default class AddanExercise extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/days')
+    const currentUserJSON = localStorage.getItem('currentUser');
+    const currentUser = JSON.parse(currentUserJSON);
+    const { token } = currentUser;
+    fetch('/api/days', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ days: data });
@@ -23,16 +31,17 @@ export default class AddanExercise extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const { token } = this.props;
     const { dayId, exerciseName, exerciseDescription } = this.state;
     const newExercise = { exerciseName, exerciseDescription, dayId };
     if (dayId === 'default') {
       throw new ClientError(400, 'Please enter a valid Day of the week.');
     } else {
-
       fetch('/api/days/exercises', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-access-token': token
         },
         body: JSON.stringify(newExercise)
       })
@@ -41,15 +50,14 @@ export default class AddanExercise extends React.Component {
         .catch(error => {
           console.error('Error:', error);
         });
-
-      window.location.hash = `#calendar?dayId=${dayId}`;
-      this.setState({
-        days: [],
-        dayId: 'default',
-        exerciseName: '',
-        exerciseDescription: ''
-      });
     }
+    window.location.hash = `#calendar?dayId=${dayId}`;
+    this.setState({
+      days: [],
+      dayId: 'default',
+      exerciseName: '',
+      exerciseDescription: ''
+    });
   }
 
   handleDays() {

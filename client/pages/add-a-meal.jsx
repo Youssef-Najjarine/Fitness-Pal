@@ -14,7 +14,13 @@ export default class AddaMeal extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/days')
+    const { token } = this.props;
+    fetch('/api/days', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ days: data });
@@ -23,33 +29,33 @@ export default class AddaMeal extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const { token } = this.props;
     const { dayId, mealName, mealDescription } = this.state;
     const newMeal = { mealName, mealDescription, dayId };
     if (dayId === 'default') {
       throw new ClientError(400, 'Please enter a valid Day of the week.');
     } else {
-
       fetch('/api/days/meals', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'x-access-token': token
         },
         body: JSON.stringify(newMeal)
       })
         .then(response => response.json())
-        .then(newMeal => {})
+        .then(newMeal => { })
         .catch(error => {
           console.error('Error:', error);
         });
-
-      window.location.hash = `#calendar?dayId=${dayId}`;
-      this.setState({
-        days: [],
-        dayId: 'default',
-        mealName: '',
-        mealDescription: ''
-      });
     }
+    window.location.hash = `#calendar?dayId=${dayId}`;
+    this.setState({
+      days: [],
+      dayId: 'default',
+      mealName: '',
+      mealDescription: ''
+    });
   }
 
   handleDays() {
