@@ -4,8 +4,8 @@ export default class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
+      email: 'you@yahoo.com',
+      password: 'youssef'
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -62,7 +62,7 @@ export default class SignIn extends React.Component {
               className="sign-up-sign-in-email"
               id="sign-up-email"
               name="email"
-              type="text"
+              type="email"
               onChange={this.handleChange}
               value={this.state.email}
             />

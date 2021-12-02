@@ -16,7 +16,6 @@ export default class CalorieCalculator extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const currentUserJSON = localStorage.getItem('currentUser');
     let bmr = 0;
     const { gender, age, weight, height, activityLevel } = this.state;
     if (gender === 'default' || activityLevel === 'default') {
@@ -41,37 +40,21 @@ export default class CalorieCalculator extends React.Component {
     }
     bmr = ~~bmr;
     const newObject = { bmr };
-    if (currentUserJSON !== null) {
-      const currentUser = JSON.parse(currentUserJSON);
-      const { token } = currentUser;
-      fetch('/api/users/:userId', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token
-        },
-        body: JSON.stringify(newObject)
-      })
-        .then(response => response.json())
-        .then(data => { })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    } else {
-      fetch('/api/users/:userId', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newObject)
-      })
-        .then(response => response.json())
-        .then(data => { })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+    const { token } = this.props;
+    fetch('/api/users/:userId', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token
+      },
+      body: JSON.stringify(newObject)
+    })
+      .then(response => response.json())
+      .then(data => { })
+      .catch(error => {
+        console.error('Error:', error);
+      });
 
-    }
     window.location.hash = '#calendar?dayId=1';
     this.setState({
       gender: 'default',

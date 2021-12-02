@@ -17,6 +17,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       user: null,
+      token: null,
       route: parseRoute(window.location.hash)
     };
     this.handleSignIn = this.handleSignIn.bind(this);
@@ -28,31 +29,34 @@ export default class App extends React.Component {
     });
     const userJSON = window.localStorage.getItem('currentUser');
     const user = userJSON ? JSON.parse(userJSON).name : null;
-    this.setState({ user: user });
+    const token = userJSON ? JSON.parse(userJSON).token : null;
+    this.setState({ user: user, token: token });
   }
 
   handleSignIn(currentUser) {
     window.localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    this.setState({ user: currentUser.name });
+    this.setState({ user: currentUser.name, token: currentUser.token });
   }
 
   renderPage() {
-    const { route, user } = this.state;
-    if (route.path === 'calendar' || route.path === '') {
+    const { route, user, token } = this.state;
+    if (!user) {
+      return <SignIn handleSignIn={this.handleSignIn}/>;
+    } else if (route.path === 'calendar' || route.path === '') {
       const dayId = route.params.get('dayId') || 1;
-      return <Calendar dayId={dayId} user={user}/>;
+      return <Calendar dayId={dayId} user={user} token={token}/>;
     } else if (route.path === 'CalorieCalculator') {
-      return <CalorieCalculator />;
+      return <CalorieCalculator token={token}/>;
     } else if (route.path === 'AddNewMealOrExercise') {
       return <AddNewMealOrExercise />;
     } else if (route.path === 'addaNewMeal') {
-      return <AddaMeal />;
+      return <AddaMeal token={token}/>;
     } else if (route.path === 'addaNewExercise') {
-      return <AddanExercise />;
+      return <AddanExercise token={token}/>;
     } else if (route.path === 'editAMeal') {
-      return <EditAMeal/>;
+      return <EditAMeal token={token}/>;
     } else if (route.path === 'editAExercise') {
-      return <EditAExercise/>;
+      return <EditAExercise token={token}/>;
     } else if (route.path === 'SignUpOrSignIn') {
       return <SignUpOrSignIn/>;
     } else if (route.path === 'createAccount') {
@@ -63,11 +67,11 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { route } = this.state;
+    const { route, user } = this.state;
     const dayId = route.params.get('dayId');
     return (
       <div className='container'>
-        <Header logo= 'Fitness PaL'/>
+        <Header logo='Fitness PaL' user={user}/>
         { this.renderPage() }
         <Footer dayId={dayId}/>
       </div>

@@ -24,12 +24,68 @@ app.use(jsonMiddleware);
 
 app.use(errorMiddleware);
 
-app.use(authorizationMiddleware);
-app.get('/api/users', (req, res) => {
-  let userId = 1;
-  if (req.user) {
-    userId = req.user.userId;
+app.post('/api/users/sign-up', (req, res, next) => {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
+    throw new ClientError(400, 'first name, last name, email, and password are required fields');
   }
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+        insert into "users" ("firstName", "lastName", "email", "hashedPassword", "RDA")
+        values ($1, $2, $3, $4, $5)
+        returning "userId", "firstName", "lastName", "createdAt"
+      `;
+      const params = [firstName, lastName, email, hashedPassword, 0];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/users/sign-in', (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new ClientError(401, 'invalid login');
+  }
+  const sql = `
+    select "userId",
+           "hashedPassword",
+           "firstName",
+           "lastName"
+      from "users"
+     where "email" = $1
+  `;
+  const params = [email];
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      if (!user) {
+        throw new ClientError(401, 'invalid login');
+      }
+      const { userId, hashedPassword, firstName, lastName } = user;
+      return argon2
+        .verify(hashedPassword, password)
+        .then(isMatching => {
+          if (!isMatching) {
+            throw new ClientError(401, 'invalid login');
+          }
+          const payload = { userId, fullName: firstName + ' ' + lastName };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          res.json({ token, user: payload });
+        });
+    })
+    .catch(err => next(err));
+});
+
+app.use(authorizationMiddleware);
+
+app.get('/api/users', (req, res) => {
+  const userId = req.user.userId;
   const sql = `
     select  "RDA"
       from "users"
@@ -69,10 +125,7 @@ app.get('/api/days', (req, res) => {
 });
 
 app.get('/api/days/:dayId/meals', (req, res) => {
-  let userId = 1;
-  if (req.user) {
-    userId = req.user.userId;
-  }
+  const userId = req.user.userId;
   const { dayId } = req.params;
   const sql = `
     select *
@@ -95,10 +148,7 @@ app.get('/api/days/:dayId/meals', (req, res) => {
 });
 
 app.get('/api/days/:dayId/exercises', (req, res) => {
-  let userId = 1;
-  if (req.user) {
-    userId = req.user.userId;
-  }
+  const userId = req.user.userId;
   const { dayId } = req.params;
   const sql = `
     select *
@@ -162,12 +212,7 @@ app.get('/api/exercises/:exerciseId', (req, res) => {
     });
 });
 app.post('/api/days/meals', (req, res) => {
-  let userId = 0;
-  if (!req.user) {
-    userId = 1;
-  } else {
-    userId = req.user.userId;
-  }
+  const userId = req.user.userId;
   const { mealName, mealDescription, dayId } = req.body;
   if (!mealName || !mealDescription) {
     throw new ClientError(400, 'Please enter a valid meal name and description.');
@@ -192,12 +237,7 @@ app.post('/api/days/meals', (req, res) => {
 });
 
 app.post('/api/days/exercises', (req, res) => {
-  let userId = 0;
-  if (!req.user) {
-    userId = 1;
-  } else {
-    userId = req.user.userId;
-  }
+  const userId = req.user.userId;
   const { exerciseName, exerciseDescription, dayId } = req.body;
   if (!exerciseName || !exerciseDescription) {
     throw new ClientError(400, 'Please enter a valid exercise name and description.');
@@ -351,64 +391,6 @@ app.delete('/api/exercises/:exerciseId', function (req, res) {
       return res.sendStatus(204);
     }
   });
-});
-
-app.post('/api/users/sign-up', (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
-    throw new ClientError(400, 'first name, last name, email, and password are required fields');
-  }
-  argon2
-    .hash(password)
-    .then(hashedPassword => {
-      const sql = `
-        insert into "users" ("firstName", "lastName", "email", "hashedPassword", "RDA")
-        values ($1, $2, $3, $4, $5)
-        returning "userId", "firstName", "lastName", "createdAt"
-      `;
-      const params = [firstName, lastName, email, hashedPassword, 0];
-      return db.query(sql, params);
-    })
-    .then(result => {
-      const [user] = result.rows;
-      res.status(201).json(user);
-    })
-    .catch(err => next(err));
-});
-
-app.post('/api/users/sign-in', (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    throw new ClientError(401, 'invalid login');
-  }
-  const sql = `
-    select "userId",
-           "hashedPassword",
-           "firstName",
-           "lastName"
-      from "users"
-     where "email" = $1
-  `;
-  const params = [email];
-  db.query(sql, params)
-    .then(result => {
-      const [user] = result.rows;
-      if (!user) {
-        throw new ClientError(401, 'invalid login');
-      }
-      const { userId, hashedPassword, firstName, lastName } = user;
-      return argon2
-        .verify(hashedPassword, password)
-        .then(isMatching => {
-          if (!isMatching) {
-            throw new ClientError(401, 'invalid login');
-          }
-          const payload = { userId, fullName: firstName + ' ' + lastName };
-          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          res.json({ token, user: payload });
-        });
-    })
-    .catch(err => next(err));
 });
 
 app.listen(process.env.PORT, () => {

@@ -14,7 +14,15 @@ export default class AddanExercise extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/days')
+    const currentUserJSON = localStorage.getItem('currentUser');
+    const currentUser = JSON.parse(currentUserJSON);
+    const { token } = currentUser;
+    fetch('/api/days', {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({ days: data });
@@ -23,32 +31,17 @@ export default class AddanExercise extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const currentUserJSON = localStorage.getItem('currentUser');
+    const { token } = this.props;
     const { dayId, exerciseName, exerciseDescription } = this.state;
     const newExercise = { exerciseName, exerciseDescription, dayId };
     if (dayId === 'default') {
       throw new ClientError(400, 'Please enter a valid Day of the week.');
-    } else if (currentUserJSON !== null) {
-      const currentUser = JSON.parse(currentUserJSON);
-      const { token } = currentUser;
+    } else {
       fetch('/api/days/exercises', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        },
-        body: JSON.stringify(newExercise)
-      })
-        .then(response => response.json())
-        .then(newExercise => { })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    } else {
-      fetch('/api/days/exercises', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
         },
         body: JSON.stringify(newExercise)
       })
