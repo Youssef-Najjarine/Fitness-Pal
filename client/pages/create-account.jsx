@@ -38,7 +38,7 @@ export default class CreateAccount extends React.Component {
           console.error('Error:', error);
         });
 
-      window.location.hash = '#calendar?dayId=1';
+      window.location.hash = '#SignUpOrSignIn';
     }
   }
 
@@ -104,7 +104,7 @@ export default class CreateAccount extends React.Component {
           />
       </div>
           <div className="sign-up-sign-in-cancel-submit">
-            <a href="#calendar?dayId=1">Cancel</a>
+            <a href="#SignUpOrSignIn">Cancel</a>
             <button>Create Account</button>
           </div>
         </form>
