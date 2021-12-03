@@ -12,13 +12,13 @@ function getSignOutClassname(user) {
 }
 
 export default function Header(props) {
-  const { logo, user } = props;
+  const { logo, user, handleSignOut } = props;
   return (
     <>
       <header className='row'>
         <a href='#calendar?dayId=1'><h1>{logo}</h1></a>
         <a href= '#SignUpOrSignIn'className={getSignInClassname(user)}></a>
-        <a href='#signIn' className={getSignOutClassname(user)}></a>
+        <a href='#SignUpOrSignIn' className={getSignOutClassname(user)} onClick={() => handleSignOut('currentUser')}></a>
         </header>
     </>
   );

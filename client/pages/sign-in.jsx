@@ -80,7 +80,7 @@ export default class SignIn extends React.Component {
             />
           </div>
           <div className="sign-up-sign-in-cancel-submit">
-            <a href="#calendar?dayId=1">Cancel</a>
+            <a href="#SignUpOrSignIn">Cancel</a>
             <button>Sign In</button>
           </div>
         </form>

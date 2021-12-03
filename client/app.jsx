@@ -21,6 +21,7 @@ export default class App extends React.Component {
       route: parseRoute(window.location.hash)
     };
     this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleSignOut = this.handleSignOut.bind(this);
   }
 
   componentDidMount() {
@@ -38,9 +39,14 @@ export default class App extends React.Component {
     this.setState({ user: currentUser.name, token: currentUser.token });
   }
 
+  handleSignOut(currentUser) {
+    window.localStorage.removeItem(currentUser);
+    this.setState({ user: null, token: null });
+  }
+
   renderPage() {
     const { route, user, token } = this.state;
-    if (!user) {
+    if (!user && route.path !== 'SignUpOrSignIn' && route.path !== 'createAccount') {
       return <SignIn handleSignIn={this.handleSignIn}/>;
     } else if (route.path === 'calendar' || route.path === '') {
       const dayId = route.params.get('dayId') || 1;
@@ -71,7 +77,7 @@ export default class App extends React.Component {
     const dayId = route.params.get('dayId');
     return (
       <div className='container'>
-        <Header logo='Fitness PaL' user={user}/>
+        <Header logo='Fitness PaL' user={user} handleSignOut={this.handleSignOut}/>
         { this.renderPage() }
         <Footer dayId={dayId}/>
       </div>
