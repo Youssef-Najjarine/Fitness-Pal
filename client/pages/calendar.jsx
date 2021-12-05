@@ -173,7 +173,6 @@ export default class Calendar extends React.Component {
   }
 
   render() {
-
     return (
       <main>
         <div className='column-full bmr'><h2>Basal metabolic rate (BMR): {this.getBmr()}</h2></div>

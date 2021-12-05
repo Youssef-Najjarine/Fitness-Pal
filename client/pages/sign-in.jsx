@@ -74,7 +74,7 @@ export default class SignIn extends React.Component {
               className="sign-up-sign-in-password"
               id="sign-up-email"
               name="password"
-              type="text"
+              type="password"
               onChange={this.handleChange}
               value={this.state.password}
             />
