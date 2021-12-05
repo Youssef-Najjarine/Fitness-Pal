@@ -13,10 +13,6 @@ export default class CreateAccount extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-
-  }
-
   handleSubmit(event) {
     event.preventDefault();
     const { firstName, lastName, email, password } = this.state;
@@ -86,7 +82,7 @@ export default class CreateAccount extends React.Component {
             className="sign-up-sign-in-email"
             id="sign-up-email"
             name="email"
-            type="text"
+            type="email"
             onChange={this.handleChange}
             value={this.state.email}
           />
@@ -98,7 +94,7 @@ export default class CreateAccount extends React.Component {
             className="sign-up-sign-in-password"
             id="sign-up-email"
             name="password"
-            type="text"
+            type="password"
             onChange={this.handleChange}
             value={this.state.password}
           />
