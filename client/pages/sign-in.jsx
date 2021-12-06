@@ -5,7 +5,7 @@ export default class SignIn extends React.Component {
     super(props);
     this.state = {
       email: 'you@yahoo.com',
-      password: 'youssef'
+      password: 'apples'
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
