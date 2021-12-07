@@ -248,3 +248,93 @@ ul {
   width: 900px;
   height: 40px;
 }
+
+@media only screen and (max-width: 768px) {
+  .add-new-meal-or-exercise a {
+    width: 650px;
+    padding: 100px 0;
+    font-size: 50px;
+  }
+
+  .footer-display {
+    height: 120px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  ul.row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  ul div.column-half {
+    width: 100%;
+  }
+
+  ul .column-half:nth-of-type(1) {
+    border-style: solid;
+    border-color: white;
+    margin-bottom: 50px;
+  }
+
+  .days-buttons a {
+    font-size: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 25px;
+    color: white;
+  }
+
+  .calendar,
+  .calculator,
+  .add-icon {
+    padding: 10px;
+    font-size: 40px;
+  }
+
+  .footer-display {
+    height: 80px;
+  }
+
+  .calorie-calculator {
+    padding: 20px;
+  }
+
+  .calorie-calculator label {
+    display: none;
+  }
+
+  .calorie-calculator input::placeholder {
+    font-size: 15px;
+  }
+
+  .calorie-calculator .row:nth-of-type(5) select {
+    font-size: 15px;
+  }
+
+  .add-new-meal-or-exercise a {
+    width: 350px;
+    padding: 100px 0;
+    font-size: 20px;
+  }
+
+  .sign-up-sign-in h2 {
+    font-size: 30px;
+    margin-top: 100px;
+  }
+
+  .sign-up-sign-in-email,
+  .sign-up-sign-in-password {
+    font-size: 20px;
+    width: 300px;
+  }
+
+  .sign-up-sign-in-cancel-submit a,
+  .sign-up-sign-in-cancel-submit button {
+    padding: 25px;
+    font-size: 15px;
+  }
+}
