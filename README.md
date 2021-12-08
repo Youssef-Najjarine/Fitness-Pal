@@ -13,6 +13,11 @@ Here is a link to **Fitness Pal**:
 - CSS
 - JavaScript
 - React
+- Argon2
+- Express
+- Webpack
+- Babel
+- pg
 - Figma's wireframing tools to better plan for and organize the application before beginning the project.
 - Applied *CSS3* media queries to achieve an application that is more responsive towards mobile users.
 
