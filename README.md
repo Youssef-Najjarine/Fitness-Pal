@@ -30,10 +30,12 @@ Here is a link to **Fitness Pal**:
 
 ![add-meal-exercise-plan-demo](https://user-images.githubusercontent.com/71291742/145139885-328b3b4b-0219-4fc4-b21f-3be4d4a13cf3.gif)
 
-![review-animes-demo](https://user-images.githubusercontent.com/71291742/145110286-8dd4c706-1fa1-42a9-855c-1f59b7665dff.gif)
+![calorie-calculator--demo](https://user-images.githubusercontent.com/71291742/145140001-89284dcb-e01b-4d6d-8e45-252df8a28025.gif)
+
+
 
 **Stretch features:**
 
-- Users can create a profile
-- Users can edit reviewed animes and favorited animes
-- Users can delete reviewed animes and favorited animes
+- Users can add a cookBook of favorite recipes
+- Users can view recipes and workout regimens of friends
+- Users can be matched with a personal trainer that best suits their needs.
