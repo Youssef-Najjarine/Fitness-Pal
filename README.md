@@ -37,6 +37,8 @@ Here is a link to **Fitness Pal**:
 
 ![calorie-calculator--demo](https://user-images.githubusercontent.com/71291742/145140001-89284dcb-e01b-4d6d-8e45-252df8a28025.gif)
 
+![full-fitnessPalDemo](full-fitnessPalDemo.gif)
+
 
 
 **Stretch features:**
